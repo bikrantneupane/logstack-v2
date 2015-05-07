@@ -1,0 +1,56 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  tasks:
+    - name: Register vpc and subnet in us-west-2
+      ec2_vpc:
+        state: present
+        cidr_block: "{{ cidr }}"
+        region: us-west-2
+        resource_tags: { "Env":"{{ tag_Env }}", "Name": "{{ tag_Name }}"  }
+        internet_gateway: True
+        subnets:
+          - cidr: 172.16.0.0/20
+            az: us-west-2a
+            resource_tags: { "Env":"{{ tag_Name }}", "Name": "{{ tag_Name }}" }
+          - cidr: 172.16.16.0/20
+            az: us-west-2b
+            resource_tags: { "Env":"{{ tag_Name }}", "Name": "{{ tag_Name }}" }
+        route_tables:
+          - subnets:
+              - 172.16.0.0/20
+              - 172.16.16.0/20
+            routes:
+              - dest: 0.0.0.0/0
+                gw: igw
+      register: vpc
+
+    - name: 
+
+
+
+
+- name: create launch config
+  ec2_lc:
+    name: my_new_lc
+    image_id: ami-lkajsf
+    key_name: mykey
+    region: us-east-1
+    security_groups: sg-23423
+    instance_type: m1.small
+    assign_public_ip: yes
+
+- ec2_asg:
+    name: myasg
+    launch_config_name: my_new_lc
+    health_check_period: 60
+    health_check_type: ELB
+    replace_all_instances: yes
+    min_size: 5
+    max_size: 5
+    desired_capacity: 5
+    region: us-east-1
+
+

@@ -1,0 +1,6 @@
+[dev]
+192.168.56.103
+
+[local]
+localhost ami_id=ami-e7527ed7 tag_Env=dev tag_Name=taw cidr=172.16.0.0/16
+
