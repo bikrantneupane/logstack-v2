@@ -1,7 +1,0 @@
----
-- hosts: dev
-  remote_user: bikrant
-  sudo: yes
-  tasks:
-    - name: test connection
-      ping:
